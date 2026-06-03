@@ -15,5 +15,5 @@ public interface PuntoRepository extends MongoRepository<Punto, String> {
     List<Punto> findByTipo(String tipo);
     List<Punto> findByTipoIgnoreCase(String tipo);
     List<Punto> findByUsuarioId(String usuarioId);
-    L
+
 }

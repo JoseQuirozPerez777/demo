@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -117,10 +118,10 @@ public class PuntoService {
             .telefono(punto.getTelefono())
             .whatsapp(punto.getWhatsapp()) // Asegúrate de que coincida con el nombre en tu DTO
             .materiales(punto.getMateriales())
-            .recompensas(toRecompensaEntityList(dto.getRecompensas()))
+            .recompensas(toRecompensaDtoList(punto.getRecompensas()))
             .usuarioId(punto.getUsuarioId())
             .imagenes(punto.getImagenes())
-            .redes(punto.getRedes())
+            .redes(toRedDtoList(punto.getRedes()))
             .build();
 }
     // =========================
@@ -137,7 +138,15 @@ public class PuntoService {
     // BUSQUEDAS
     // =========================
     public List<PuntoResponseDto> buscarPorTipo(String tipo) {
-        return puntoRepository.findByTipo(tipo)
+        if(tipo.equalsIgnoreCase("todos")){
+
+          return puntoRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();  
+        }
+
+        return puntoRepository.findByTipoIgnoreCase(tipo)
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -147,6 +156,7 @@ public class PuntoService {
     // MAPPER RESPONSE
     // =========================
     private PuntoResponseDto toResponse(Punto punto) {
+        
         return PuntoResponseDto.builder()
                 .id(punto.getId())
                 .nombre(punto.getNombre())
@@ -283,7 +293,7 @@ public class PuntoService {
         return usuarioRepository.findById(usuarioId.trim())
                 .map(usuario -> {
                     // Cambia 'getRol()' por el método real de tu entidad Usuario (ej. getRole(), getTipoUsuario())
-                    String rol = usuario.getRol(); 
+                    String rol = usuario.getRol().toString(); 
                     
                     // Si el rol almacenado en la BD es "ADMIN", se le concede el permiso
                     return rol != null && rol.trim().equalsIgnoreCase("ADMIN");

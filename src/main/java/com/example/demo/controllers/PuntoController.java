@@ -85,7 +85,7 @@ public class PuntoController {
     ) {
         return puntoService.buscarPorRadioYTipo(lat, lng, radio, tipo);
     }
-    @PutMapping("/{id}")
+    @PutMapping("/usuario/{id}")
     public ResponseEntity<?> actualizarPunto(
         @PathVariable String id,
         @RequestParam String usuarioId, // Solo recibimos el ID del usuario que interactúa
