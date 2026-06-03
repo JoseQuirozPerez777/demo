@@ -1,12 +1,12 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -34,5 +34,6 @@ public class PuntoRequestDto {
     private String usuarioId;
 
     private List<String> imagenes;
-    private List<String> redes;
+
+    private List<RedDto> redes;
 }

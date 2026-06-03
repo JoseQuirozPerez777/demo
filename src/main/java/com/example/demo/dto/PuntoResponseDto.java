@@ -32,5 +32,6 @@ public class PuntoResponseDto {
     private String usuarioId;
 
     private List<String> imagenes;
-    private List<String> redes;
+
+    private List<RedDto> redes;
 }

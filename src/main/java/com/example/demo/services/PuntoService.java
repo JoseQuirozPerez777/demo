@@ -3,8 +3,10 @@ package com.example.demo.services;
 import com.example.demo.dto.PuntoRequestDto;
 import com.example.demo.dto.PuntoResponseDto;
 import com.example.demo.dto.RecompensaDto;
+import com.example.demo.dto.RedDto;
 import com.example.demo.entities.Punto;
 import com.example.demo.entities.Recompensa;
+import com.example.demo.entities.Red;
 import com.example.demo.repositories.PuntoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class PuntoService {
 
     private final PuntoRepository puntoRepository;
 
+    // =========================
+    // LISTAR
+    // =========================
     public List<PuntoResponseDto> listarPuntos() {
         return puntoRepository.findAll()
                 .stream()
@@ -25,6 +30,9 @@ public class PuntoService {
                 .toList();
     }
 
+    // =========================
+    // OBTENER POR ID
+    // =========================
     public PuntoResponseDto obtenerPuntoPorId(String id) {
         Punto punto = puntoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Punto no encontrado"));
@@ -32,7 +40,11 @@ public class PuntoService {
         return toResponse(punto);
     }
 
+    // =========================
+    // CREAR
+    // =========================
     public PuntoResponseDto crearPunto(PuntoRequestDto dto) {
+
         Punto punto = Punto.builder()
                 .nombre(dto.getNombre())
                 .tipo(dto.getTipo())
@@ -47,13 +59,17 @@ public class PuntoService {
                 .recompensas(toRecompensaEntityList(dto.getRecompensas()))
                 .usuarioId(dto.getUsuarioId())
                 .imagenes(safeList(dto.getImagenes()))
-                .redes(safeList(dto.getRedes()))
+                .redes(toRedEntityList(dto.getRedes()))
                 .build();
 
         return toResponse(puntoRepository.save(punto));
     }
 
+    // =========================
+    // ACTUALIZAR
+    // =========================
     public PuntoResponseDto actualizarPunto(String id, PuntoRequestDto dto) {
+
         Punto punto = puntoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Punto no encontrado"));
 
@@ -70,11 +86,14 @@ public class PuntoService {
         punto.setRecompensas(toRecompensaEntityList(dto.getRecompensas()));
         punto.setUsuarioId(dto.getUsuarioId());
         punto.setImagenes(safeList(dto.getImagenes()));
-        punto.setRedes(safeList(dto.getRedes()));
+        punto.setRedes(toRedEntityList(dto.getRedes()));
 
         return toResponse(puntoRepository.save(punto));
     }
 
+    // =========================
+    // ELIMINAR
+    // =========================
     public void eliminarPunto(String id) {
         Punto punto = puntoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Punto no encontrado"));
@@ -82,6 +101,9 @@ public class PuntoService {
         puntoRepository.delete(punto);
     }
 
+    // =========================
+    // BUSQUEDAS
+    // =========================
     public List<PuntoResponseDto> buscarPorTipo(String tipo) {
         return puntoRepository.findByTipo(tipo)
                 .stream()
@@ -96,6 +118,9 @@ public class PuntoService {
                 .toList();
     }
 
+    // =========================
+    // MAPPER RESPONSE
+    // =========================
     private PuntoResponseDto toResponse(Punto punto) {
         return PuntoResponseDto.builder()
                 .id(punto.getId())
@@ -112,14 +137,15 @@ public class PuntoService {
                 .recompensas(toRecompensaDtoList(punto.getRecompensas()))
                 .usuarioId(punto.getUsuarioId())
                 .imagenes(safeList(punto.getImagenes()))
-                .redes(safeList(punto.getRedes()))
+                .redes(toRedDtoList(punto.getRedes()))
                 .build();
     }
 
+    // =========================
+    // RECOMPENSAS MAPPERS
+    // =========================
     private List<Recompensa> toRecompensaEntityList(List<RecompensaDto> dtos) {
-        if (dtos == null) {
-            return new ArrayList<>();
-        }
+        if (dtos == null) return new ArrayList<>();
 
         return dtos.stream()
                 .map(dto -> Recompensa.builder()
@@ -132,20 +158,46 @@ public class PuntoService {
     }
 
     private List<RecompensaDto> toRecompensaDtoList(List<Recompensa> recompensas) {
-        if (recompensas == null) {
-            return new ArrayList<>();
-        }
+        if (recompensas == null) return new ArrayList<>();
 
         return recompensas.stream()
-                .map(recompensa -> RecompensaDto.builder()
-                        .nombre(recompensa.getNombre())
-                        .descripcion(recompensa.getDescripcion())
-                        .stock(recompensa.getStock())
-                        .estado(recompensa.getEstado())
+                .map(r -> RecompensaDto.builder()
+                        .nombre(r.getNombre())
+                        .descripcion(r.getDescripcion())
+                        .stock(r.getStock())
+                        .estado(r.getEstado())
                         .build())
                 .toList();
     }
 
+    // =========================
+    // REDES MAPPERS (CORREGIDO)
+    // =========================
+    private List<Red> toRedEntityList(List<RedDto> dtos) {
+        if (dtos == null) return new ArrayList<>();
+
+        return dtos.stream()
+                .map(dto -> Red.builder()
+                        .nombre(dto.getNombre())
+                        .enlace(dto.getEnlace())
+                        .build())
+                .toList();
+    }
+
+    private List<RedDto> toRedDtoList(List<Red> redes) {
+        if (redes == null) return new ArrayList<>();
+
+        return redes.stream()
+                .map(r -> RedDto.builder()
+                        .nombre(r.getNombre())
+                        .enlace(r.getEnlace())
+                        .build())
+                .toList();
+    }
+
+    // =========================
+    // SAFE LIST
+    // =========================
     private List<String> safeList(List<String> lista) {
         return lista == null ? new ArrayList<>() : lista;
     }
