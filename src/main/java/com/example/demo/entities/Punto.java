@@ -55,4 +55,11 @@ public class Punto {
 
     @Builder.Default
     private List<Red> redes = new ArrayList<>();
+
+    public boolean esDeTipo(String tipoAComprobar) {
+    if (this.tipo == null || tipoAComprobar == null) {
+        return false;
+    }
+    return this.tipo.trim().equalsIgnoreCase(tipoAComprobar.trim());
+}
 }
