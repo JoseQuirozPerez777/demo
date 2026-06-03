@@ -10,6 +10,7 @@ import com.example.demo.repositories.ReseniasPuntoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,11 +97,30 @@ public class ReseniasPuntoService {
                 .toList();
     }
 
+    // ... (Tus otros métodos del servicio se mantienen igual)
+
+    // --- NUEVO MÉTODO: OBTENER RESEÑAS POR USUARIO ---
+    public List<ReseniaResponseDto> obtenerReseniasPorUsuarioId(String usuarioId) {
+        if (usuarioId == null) {
+            return new ArrayList<>();
+        }
+
+        // Buscamos todas las reseñas de todos los puntos y filtramos las del usuario
+        return reseniasPuntoRepository.findAll().stream()
+                .flatMap(documento -> documento.getResenias().stream()) // Aplana todas las listas de reseñas en un solo flujo
+                .filter(resenia -> resenia.getUsuarioId() != null && resenia.getUsuarioId().equals(usuarioId.trim()))
+                .map(this::toReseniaResponse) // Mapea utilizando el método actualizado que incluye fecha
+                .toList();
+    }
+
+    // --- MÉTODOS DE MAPEO ACTUALIZADOS ---
+
     private Resenia toReseniaEntity(ReseniaRequestDto dto) {
         return Resenia.builder()
                 .usuarioId(dto.getUsuarioId())
                 .puntaje(dto.getPuntaje())
                 .comentario(dto.getComentario())
+                .fechaCreacion(LocalDateTime.now()) // Asegura que se guarde el instante exacto de creación
                 .build();
     }
 
@@ -108,13 +128,18 @@ public class ReseniasPuntoService {
         if (resenias == null) {
             return new ArrayList<>();
         }
-
         return resenias.stream()
-                .map(resenia -> ReseniaResponseDto.builder()
-                        .usuarioId(resenia.getUsuarioId())
-                        .puntaje(resenia.getPuntaje())
-                        .comentario(resenia.getComentario())
-                        .build())
+                .map(this::toReseniaResponse)
                 .toList();
+    }
+
+    // Helper extraído para reutilizar la conversión de una sola reseña incluyendo su fecha
+    private ReseniaResponseDto toReseniaResponse(Resenia resenia) {
+        return ReseniaResponseDto.builder()
+                .usuarioId(resenia.getUsuarioId())
+                .puntaje(resenia.getPuntaje())
+                .comentario(resenia.getComentario())
+                .fechaCreacion(resenia.getFechaCreacion()) // Mapeo de la fecha
+                .build();
     }
 }

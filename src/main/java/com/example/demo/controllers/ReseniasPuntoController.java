@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ReseniaRequestDto;
+import com.example.demo.dto.ReseniaResponseDto;
 import com.example.demo.dto.ReseniasPuntoRequestDto;
 import com.example.demo.dto.ReseniasPuntoResponseDto;
 import com.example.demo.services.ReseniasPuntoService;
@@ -72,5 +73,12 @@ public class ReseniasPuntoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminarDocumentoResenias(@PathVariable String id) {
         reseniasPuntoService.eliminarDocumentoResenias(id);
+    }
+
+    // Agrega este método dentro de tu ReseniasPuntoController.java
+
+    @GetMapping("/usuario/{usuarioId}")
+    public List<ReseniaResponseDto> obtenerReseniasPorUsuarioId(@PathVariable String usuarioId) {
+        return reseniasPuntoService.obtenerReseniasPorUsuarioId(usuarioId);
     }
 }
