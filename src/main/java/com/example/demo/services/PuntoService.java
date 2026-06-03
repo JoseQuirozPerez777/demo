@@ -295,7 +295,7 @@ public class PuntoService {
                     // Cambia 'getRol()' por el método real de tu entidad Usuario (ej. getRole(), getTipoUsuario())
                     String rol = usuario.getRol().toString(); 
                     
-                    // Si el rol almacenado en la BD es "ADMIN", se le concede el permiso
+                 // Si el rol almacenado en la BD es "ADMIN", se le concede el permiso
                     return rol != null && rol.trim().equalsIgnoreCase("ADMIN");
                 })
                 .orElse(false); // Si el usuario no existe en la BD, devuelve false

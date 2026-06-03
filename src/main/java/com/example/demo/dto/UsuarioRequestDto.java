@@ -22,4 +22,6 @@ public class UsuarioRequestDto {
 
     @NotBlank(message = "La contraseña es obligatoria")
     private String password;
+
+    private String foto;
 }

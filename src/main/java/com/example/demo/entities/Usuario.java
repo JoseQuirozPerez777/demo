@@ -32,4 +32,5 @@ public class Usuario {
 
     @Builder.Default
     private Rol rol = Rol.USER;
+    private String foto;
 }

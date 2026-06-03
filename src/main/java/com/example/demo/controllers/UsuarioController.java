@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-
     @PostMapping("/login")
     public UsuarioResponseDto login(
             @RequestBody LoginRequestDto dto) {
