@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.UsuarioRequestDto;
 import com.example.demo.dto.UsuarioResponseDto;
 import com.example.demo.services.UsuarioService;
@@ -26,6 +27,13 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+
+    @PostMapping("/login")
+    public UsuarioResponseDto login(
+            @RequestBody LoginRequestDto dto) {
+
+        return usuarioService.login(dto);
+    }
 
     @GetMapping
     public List<UsuarioResponseDto> listarUsuarios() {

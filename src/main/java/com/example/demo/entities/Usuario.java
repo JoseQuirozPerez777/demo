@@ -1,12 +1,13 @@
 package com.example.demo.entities;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 @Data
 @Builder
@@ -14,6 +15,11 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 @AllArgsConstructor
 @Document(collection = "usuarios")
 public class Usuario {
+
+    public enum Rol {
+        ADMIN,
+        USER
+    }
 
     @MongoId(FieldType.OBJECT_ID)
     private String id;
@@ -24,5 +30,6 @@ public class Usuario {
 
     private String password;
 
-    private String rol;
+    @Builder.Default
+    private Rol rol = Rol.USER;
 }
