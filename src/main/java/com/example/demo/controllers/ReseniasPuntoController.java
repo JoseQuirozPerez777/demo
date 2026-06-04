@@ -22,6 +22,12 @@ import com.example.demo.services.ReseniasPuntoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST para la gestión de reseñas de puntos ecológicos.
+ * Maneja todas las operaciones relacionadas con comentarios y valoraciones
+ * que los usuarios pueden dejar sobre los puntos de reciclaje.
+ */
+
 @RestController
 @RequestMapping("/api/resenias")
 @RequiredArgsConstructor

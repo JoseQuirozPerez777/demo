@@ -92,15 +92,17 @@ public class PuntoController {
         @RequestParam String usuarioId, // Solo recibimos el ID del usuario que interactúa
         @Valid @RequestBody PuntoRequestDto dto
        ) {
+    // Verificar si el usuario tiene permisos para editar este punto
     // El servicio ahora investiga el rol internamente en la BD
     boolean autorizado = puntoService.puedeEditarPunto(id, usuarioId);
-    
+    // Si NO está autorizado, devolver error 403 (FORBIDDEN)
     if (!autorizado) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body("No tienes permisos para modificar este punto. Debes ser el propietario o un Administrador.");
     }
-    
+    // Si está autorizado, proceder con la actualización
     PuntoResponseDto puntoActualizado = puntoService.actualizarPunto(id, dto);
+    // Devolver el punto actualizado 
     return ResponseEntity.ok(puntoActualizado);
 }
 }

@@ -12,8 +12,11 @@ import com.example.demo.entities.Punto;
 public interface PuntoRepository extends MongoRepository<Punto, String> {
     @Query("{ 'lng' : { $exists: true }, 'lat' : { $exists: true } }") // Filtrado manual en servicio o indexado si usas GeoSpatial
     List<Punto> findAll();
+
     List<Punto> findByTipo(String tipo);
+
     List<Punto> findByTipoIgnoreCase(String tipo);
+    
     List<Punto> findByUsuarioId(String usuarioId);
 
 }
